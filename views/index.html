@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="/style-files/cv-style-1.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@100..900&display=swap"
+        rel="stylesheet">
+    <!-- javascript functions -->
+    <script>
+        //function to toggle the edit form and the cv section
+        function flipVisibility(id1, id2) {
+            const elem1 = document.getElementById(id1);
+            elem1.classList.toggle("visible-container"); //classList.toggle adds or removes a class based on if it exists or not
+            elem1.classList.toggle("hidden-container");
+            if (id2) {  //added if statement to be able to toggle a second element if needed
+                const elem2 = document.getElementById(id2);
+                elem2.classList.toggle("hidden-container");
+                elem2.classList.toggle("visible-container");
+            }
+
+        }
+
+        //script used to modify the placeholder based on the selection of the select element 
+        function placeholderSwap(value) {
+            const placeholder = {     //dictionary to contain placeholder values for each selection
+                1: "Enter a single language ",
+                2: "Enter a single extra qualification ",
+                3: "Enter a paragraph about your hobbies and interests"
+            }
+            document.getElementById("key-info-content").placeholder = placeholder[value] //getElementById called to find the text area in the html doc
+        }   //placeholder then swapped with 
+    </script>
+</head>
+
+<body>
+    <header>
+        <nav>
+            <span class="header-title">Aidan Malka</span>
+            {{# if authenticated }} [AUTHENTICATED] {{/if}}
+            <a href="#work-experience">Work Experience</a>
+            <a href="#education">Education</a>
+            <a href="#key-info">Key Information</a>
+            <a href="/user_images/AidanMalka-CV.pdf">Download C.V.</a>
+        </nav>
+    </header>
+
+    <main>
+        <div class="user-summary">
+            <div class="visible-container" id="user-summary-content">
+                {{#if authenticated}}
+                <!-- link will call flipVisibility function when clicked to bring up edit form -->
+                <a class="button-link flipped" href="#"
+                    onclick="flipVisibility('user-summary-content','user-summary-form')"> Edit
+                </a>
+                {{/if}}
+                <div class="summary-container">
+                    <div class="summary">
+                        <h1> {{summary.first_name}} {{summary.last_name}} </h1>
+                        <!--handlebar tags used to insert data into html template-->
+                        <h2> Phone: {{summary.phone}}</h2>
+                        <h2> Email: {{summary.email}}</h2>
+                        <p> {{summary.summary}}</p>
+                    </div>
+                    <div class="image">
+                        <!-- handlebar tag unless and if used to display a placeholder image if there is no image saved in the database -->
+                        <img
+                            src="/user_images/{{#unless summary.photo}}image-placeholder.jpg{{/unless}}{{#if summary.photo}}{{summary.photo}}{{/if}}">
+                    </div>
+                        
+                </div>
+            </div>
+            <div class="hidden-container" id="user-summary-form">
+                <div class="edit-form">
+                    {{#if authenticated }}
+                    <form action="/recieve-user-summary" method="post">
+                        <!-- <input type="hidden" name="cv_id" value="" /> -->
+                        <input type="hidden" name="user_summary_id" value="{{summary.id}}">
+                        <input type="hidden" name="cv_id" value="{{id}}">
+                        <h1>Personal Information</h1>
+                        <div>
+                            <label for="f-name" class="required">First name: </label>
+                            <!--label added so people using screen readers can navigate the form-->
+                            <input type="text" name="first_name" id="f-name" required value="{{summary.first_name}}">
+                            <!-- given value to each element to load the users data ,if they have any, to the form so they dont have to input it again when editing -->
+                        </div>
+
+                        <div>
+                            <label for="l-name" class="required">Last name: </label>
+                            <input type="text" name="last_name" id="l-name" required value="{{summary.last_name}}">
+                        </div>
+
+                        <div>
+                            <label for="phone-num" class="required">Phone number: </label>
+                            <input type="tel" name="phone_num" id="phone-num" placeholder="+44" required
+                                value="{{summary.phone}}">
+                        </div>
+
+                        <div>
+                            <label for="email" class="required"> Email: </label>
+                            <input type="email" name="email" id="email" placeholder="example@example.com" required
+                                value="{{summary.email}}">
+                        </div>
+
+                        <div>
+                            <label for="summary" class="required">Personal Summary: </label>
+                            <br>
+                            <textarea id="summary" name="summary" placeholder="Short summary about you" rows="5"
+                                required>{{summary.summary}}</textarea>
+                        </div>
+
+                        <div>
+                            <input type="submit">
+                        </div>
+                    </form>
+                    {{/if}}
+                    {{#if authenticated }}
+                    <!-- multipart form used to submit image data  -->
+                    <form action="/recieve-user-image?id={{summary.id}}&cv_id={{id}}" method="post"
+                        enctype="multipart/form-data">
+                        <div>
+                            <label for="photo" class="required">Image of yourself: </label>
+                            <!-- accept used to only accept certain types of files -->
+                            <input type="file" name="photo" id="photo" accept=".jpeg, .png, .jpg .webp" required>
+                        </div>
+                        <div>
+                            <input type="submit">
+                        </div>
+
+                    </form>
+                    {{/if}}
+                </div>
+
+            </div>
+        </div>
+
+        <div class="work-container">
+            {{#if authenticated }}
+            <a class="button-link" href="#work{{id}}" onclick="flipVisibility('work-content','work-form')"> Add </a>
+            {{/if}}
+            <a name="work-experience" class="anchor"></a>
+            <h2 class="main-title"> Work Experience </h2>
+            <div class="visible-container" id="work-content">
+                <ul class="timeline" id="work-experience">
+                    {{#each work_experience}}
+                    <li>
+                        <div id="work-{{id}}">
+                            {{#if authenticated }}
+                            <a class="button-link" href="#work-{{id}}"
+                                onclick="flipVisibility('work-{{id}}', 'work-form-{{id}}' )"> Edit
+                            </a>
+                            {{/if}}
+                            <!-- span used for inline elements -->
+                            <span class="title"> Job Role: </span>
+                            <span class="text"> {{job_role}} </span><br />
+                            <span class="title"> Employer</span>
+                            <span class="text"> {{employer}}</span><br />
+                            <span class="title"> Start date:</span>
+                            <span class="text"> {{work_start}} </span><br />
+                            <span class="title"> end date:</span>
+                            <span class="text">
+                                <!-- handlebar tags used to show current if no end date provided -->
+                                {{#unless work_end}} Current {{/unless}}
+                                {{#if work_end}} {{work_end}}{{/if}}
+                            </span><br />
+                            <!--handlebar tags used to make location not show if not provided -->
+                            {{#if work_location}}
+                            <span class="title"> Location: </span>
+                            <span class="text"> {{work_location}}</span>
+                            {{/if}}
+                            <p>
+                                <span class="title"> Notes </span>
+                            </p>
+                            <p class="text"> {{work_notes}} </span>
+                        </div>
+                        <!-- edit work -->
+                        <div class="hidden-container" id="work-form-{{id}}">
+                            <a name="work-{{id}}" class="anchor"></a>
+                            {{#if authenticated }}
+                            <form action="/recieve-work-exp" method="post">
+                                <input type="hidden" name="work_exp_id" value="{{id}}" />
+                                <input type="hidden" name="cv_id" value="{{cv_id}}" />
+                                <h3> Edit Work Experience</h3>
+                                <div>
+                                    <label for="role" class="required">Job role: </label>
+                                    <input type="text" name="job_role" id="role" required value="{{job_role}}">
+                                </div>
+
+
+                                <div>
+                                    <label for="employer" class="required">Employer: </label>
+                                    <input type="text" name="employer" id="employer" required value="{{employer}}">
+                                </div>
+
+                                <div>
+                                    <label for="s-date" class="required">Start date: </label>
+                                    <input type="date" name="work_start" id="s-date" required value="{{work_start}}">
+                                </div>
+
+                                <div>
+                                    <label for="e-date">End date: </label>
+                                    <input type="date" name="work_end" id="e-date" value="{{work_end}}">
+                                </div>
+
+                                <div>
+                                    <label for="location">Location: </label>
+                                    <input type="text" name="work_location" id="location" value="{{work_location}}">
+                                </div>
+
+                                <div>
+                                    <label for="notes" class="required">Extra notes: </label>
+                                    <br>
+                                    <textarea id="notes" name="work_notes"
+                                        placeholder="Skills learnt, description of role, ect" rows="4"
+                                        cols="50">{{work_notes}}</textarea>
+                                </div>
+
+                                <div>
+                                    <input type="submit">
+                                </div>
+                            </form>
+                            {{/if}}
+                        </div>
+                    </li>
+                    {{/each}}
+                </ul>
+            </div>
+            <!--add work  -->
+            <div class="hidden-container" id="work-form">
+                <div class="edit-form">
+                    {{#if authenticated }}
+                    <form action="/recieve-work-exp" method="post">
+                        <input type="hidden" name="work_exp_id" value="" />
+                        <input type="hidden" name="cv_id" value="{{id}}" />
+                        <h3>Add Work Experience</h3>
+                        <div>
+                            <label for="role" class="required">Job role: </label>
+                            <input type="text" name="job_role" id="role" required>
+                        </div>
+
+
+                        <div>
+                            <label for="employer" class="required">Employer: </label>
+                            <input type="text" name="employer" id="employer" required>
+                        </div>
+
+                        <div>
+                            <label for="s-date" class="required">Start date: </label>
+                            <input type="date" name="work_start" id="s-date" required>
+                        </div>
+
+                        <div>
+                            <label for="e-date">End date: </label>
+                            <input type="date" name="work_end" id="e-date">
+                        </div>
+
+                        <div>
+                            <label for="location">Location: </label>
+                            <input type="text" name="work_location" id="location">
+                        </div>
+
+                        <div>
+                            <label for="notes" class="required">Extra notes: </label>
+                            <br>
+                            <textarea id="notes" name="work_notes" placeholder="Skills learnt, description of role, ect"
+                                rows="4" cols="50"></textarea>
+                        </div>
+
+                        <div>
+                            <input type="submit">
+                        </div>
+                    </form>
+                    {{/if}}
+                </div>
+            </div>
+        </div>
+
+        <div class="education-container">
+            {{#if authenticated}}
+            <a class="button-link" href="#education-add" onclick="flipVisibility('education-content','education-form')">
+                Add
+            </a>
+            {{/if}}
+            <h2 class="main-title"> Education </h2>
+
+            <a name="education" class="anchor"></a>
+            <div class="visible-container" id="education-content">
+                <ul class="timeline" id="education">
+                    {{#each education}}
+                    <li>
+
+                        <div class="temp" id="education-content-{{id}}">
+                            {{#if authenticated}}
+                            <a class="button-link" href="#ed-{{id}}"
+                                onclick="flipVisibility('education-content-{{id}}', 'education-form-{{id}}' )"> Edit
+                            </a>
+                            {{/if}}
+                            <span class="title"> Qualification Type: </span>
+                            <span class="text">{{qualification}}</span><br />
+                            <span class="title"> School Name: </span>
+                            <span class="text">{{school_name}}</span><br />
+                            <span class="title"> Start date: </span>
+                            <span class="text"> {{school_start}} </span><br />
+                            <span class="title"> end date: </span>
+                            <span class="text"> {{#unless school_end}} Current {{/unless}}
+                                <!--if school end is empty, will show as "current", else will show as date-->
+                                {{#if school_end}} {{school_end}} {{/if}}
+                            </span><br />
+                            {{#if school_location}} <!--will only render school location if given-->
+                            <span class="title"> Location: </span>
+                            <span class="text"> {{school_location}} </span><br />
+                            {{/if}}
+                        </div>
+                        <!-- edit education -->
+                        <div class="hidden-container" id="education-form-{{id}}">
+                            <a name="ed-{{id}}" class="anchor"></a>
+                            {{#if authenticated }}
+                            <form action="/recieve-education" method="post" id="edu-form">
+                                <input type="hidden" name="education_id" value="{{id}}" />
+                                <input type="hidden" name="cv_id" value="{{cv_id}}" />
+                                <h3>Edit Education</h3>
+                                <div>
+                                    <label for="qualification" class="required">Qualification type: </label>
+                                    <input type="text" name="qualification" id="qualification"
+                                        placeholder="GCSE, A-level" required value="{{qualification}}">
+                                </div>
+
+                                <div>
+                                    <label for="s-name" class="required">Name of institution: </label>
+                                    <input type="text" name="school_name" id="s-name" required value="{{school_name}}">
+                                </div>
+
+                                <div>
+                                    <label for="s-date" class="required">Start date: </label>
+                                    <input type="date" name="school_start" id="s-date" required
+                                        value="{{school_start}}">
+                                </div>
+
+                                <div>
+                                    <label for="e-date">End date: </label>
+                                    <input type="date" name="school_end" id="e-date" value="{{school_end}}">
+                                </div>
+
+
+                                <div>
+                                    <label for="location">Location: </label>
+                                    <input type="text" name="school_location" id="location" value="{{school_location}}">
+                                </div>
+
+                                <div>
+                                    <input type="submit">
+                                </div>
+                            </form>
+                            {{/if}}
+                        </div>
+                    </li>
+                    {{/each}}
+                </ul>
+            </div>
+            <!-- add education  -->
+            <div class="hidden-container" id="education-form">
+                <a name="education-add" class="anchor"></a>
+                <div class="edit-form">
+                    {{#if authenticated }}
+                    <form action="/recieve-education" method="post">
+                        <input type="hidden" name="education_id" value="" />
+                        <input type="hidden" name="cv_id" value="{{id}}" />
+                        <h3>Add Education</h3>
+                        <div>
+                            <label for="qualification" class="required">Qualification type: </label>
+                            <input type="text" name="qualification" id="qualification" placeholder="GCSE, A-level"
+                                required>
+                        </div>
+
+                        <div>
+                            <label for="s-name" class="required">Name of institution: </label>
+                            <input type="text" name="school_name" id="s-name" required>
+                        </div>
+
+                        <div>
+                            <label for="s-date" class="required">Start date: </label>
+                            <input type="date" name="school_start" id="s-date" required>
+                        </div>
+
+                        <div>
+                            <label for="e-date">End date: </label>
+                            <input type="date" name="school_end" id="e-date">
+                        </div>
+
+
+                        <div>
+                            <label for="location">Location: </label>
+                            <input type="text" name="school_location" id="location">
+                        </div>
+
+                        <div>
+                            <input type="submit">
+                        </div>
+                    </form>
+                    {{/if}}
+                </div>
+            </div>
+
+
+        </div>
+
+        <div class="key-container">
+            <div class="key-info" id="key-info">
+                {{#if authenticated }}
+                <a class="button-link flipped" href="#key-info{{id}}" onclick="flipVisibility('key-info-form')"> Add
+                </a>
+                {{/if}}
+                <h2> Key facts and skills </h2>
+                <a name="key-info" class="anchor"></a>
+
+                <div class="hidden-container" id="key-info-form">
+                    <a name="key-info{{id}}" class="anchor"></a>
+                    <div class="edit-form">
+                        {{#if authenticated }}
+                        <form action="/recieve-key-info" method="post">
+                            <input type="hidden" name="cv_id" value="{{id}}">
+                            <input type="hidden" name="key_info_content_id" value="">
+
+                            <h1>Further Information</h1>
+                            <div>
+                                <label for="key-info-type" class="required">Key attributes: </label>
+                                <select id="key-info-type" name="key_info_type" required
+                                    onchange="placeholderSwap(this.value)">
+                                    <!--when the selection is changed, the placeholderSwap function is called with the selection as the parameter-->
+                                    <option value="1">Languages</option>
+                                    <option value="2">Extra Qualifications</option>
+                                    <option value="3">Interests & Hobbies</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <label for="key-info-content" class="required">Write here: </label><br />
+                                <textarea id="key-info-content" name="key_info_content"
+                                    placeholder="Select the type of information you would like to provide from the drop down menu and write the information here"
+                                    rows="5" required></textarea>
+                            </div>
+
+                            <div>
+                                <input type="submit">
+                            </div>
+                        </form>
+                        {{/if}}
+                    </div>
+                </div>
+                <div class="skill" id="languages">
+                    <h3> Languages spoken </h3>
+
+                    <ul>
+                        {{#each key_info }}
+                        {{#ifEquals key_info_type "language"}}
+                        <li>
+                            {{key_info_content}}
+                            <!-- delete links use get requests for simplicity -->
+                            {{#if authenticated}}
+                            <a class="button-link flipped" href="/delete-key-info?id={{id}}&cv_id={{cv_id}}">Delete</a>
+                            {{/if}}
+                        </li>
+                        {{/ifEquals}}
+                        {{/each}}
+                    </ul>
+
+
+                </div>
+
+                <div class="skill" id="qualifications">
+                    <h3> Extra Qualifications </h3>
+                    <ul>
+                        {{#each key_info }}
+                        {{#ifEquals key_info_type "extra_qualification"}}
+                        <li>
+                            {{key_info_content}} 
+                            {{#if authenticated}}
+                            <a class="button-link flipped" href="/delete-key-info?id={{id}}&cv_id={{cv_id}}">
+                                Delete </a>
+                            {{/if}}
+                        </li>
+                        {{/ifEquals}}
+                        {{/each}}
+                    </ul>
+                </div>
+
+                <div class="skill" id="interests-and-exp">
+                    <h3>Interests and other experiences </h3>
+                    <ul>
+                        {{#each key_info }}
+                        {{#ifEquals key_info_type "interests"}}
+                        <li>
+                            {{key_info_content}}
+                            {{#if authenticated}}
+                            <a class="button-link flipped" href="/delete-key-info?id={{id}}&cv_id={{cv_id}}">Delete</a>
+                            {{/if}}
+                        </li>
+                        {{/ifEquals}}
+                        {{/each}}
+                    </ul>
+
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <footer></footer>
+
+</body>
+
+</html>

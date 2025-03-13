@@ -1,0 +1,485 @@
+html {
+
+    font-size: 1em;
+
+}
+
+
+
+body {
+
+    background-color: #ffffff;
+
+    font-family: "Outfit", serif;
+
+}
+
+
+
+h1 {
+
+
+
+    font-family: "Bebas Neue", serif;
+
+}
+
+
+
+h2 {
+
+
+
+    font-family: "Bebas Neue", serif;
+
+    letter-spacing: 2px;
+
+}
+
+
+
+h2.main-title {
+
+    margin-left: 1%;
+
+}
+
+
+
+h3 {
+
+    font-family: "Bebas Neue", serif;
+
+    letter-spacing: 2px;
+
+}
+
+
+
+
+
+.button-link {
+
+    float: right;
+
+    margin-right: 1%;
+
+}
+
+
+
+.button-link.flipped {
+
+    color: rgb(67, 127, 155);
+
+    background-color: #ffffff;
+
+    border: solid rgb(46, 85, 104) 2px;
+
+}
+
+
+
+a {
+
+    text-decoration: none;
+
+    color: #ffffff;
+
+    background-color: rgb(67, 127, 155);
+
+    border: solid rgb(46, 85, 104) 2px;
+
+    padding: 1%;
+
+    border-radius: 5%;
+
+
+
+}
+
+
+
+a:hover {
+
+    color: rgb(67, 127, 155);
+
+    background-color: #ffffff;
+
+    border-color: rgb(67, 127, 155);
+
+
+
+
+
+}
+
+
+
+.anchor {
+
+
+
+    display: none;
+
+
+
+}
+
+
+
+header {
+
+    position:fixed;
+
+    top:0;
+
+    width:100%;
+
+    z-index:100;
+
+}
+
+
+
+header .header-title {
+
+    background-color: #e7ebed;
+
+    font-family: "Bebas Neue", serif;
+
+    letter-spacing: 2%;
+
+    font-size: 2em;
+
+}
+
+
+
+
+
+nav {
+
+    font-size: 1.25em;
+
+    display: flex;
+
+    justify-content: space-around;
+
+    border: black solid 2px;
+
+    padding: 0.5% 5% 0.5% 5%;
+
+    background-color: #e7ebed;
+
+    font-family: "Bebas Neue", serif;
+
+    letter-spacing: 2%;
+
+}
+
+
+
+
+
+
+
+.user-summary {
+
+    margin: 2.5% auto 2.5% auto;
+
+    padding: 5%;
+
+    border: 2px solid black;
+
+    background-color: rgb(67, 127, 155);
+
+    color: white;
+
+}
+
+
+
+.user-summary img {
+
+    border: 1px solid black;
+
+    width: 100%;
+
+
+
+}
+
+
+
+.timeline {
+
+    list-style: none;
+
+    background-color: #e7ebed;
+
+    border-left: black solid 2px;
+
+    border-right: black solid 2px;
+
+    border-bottom: black solid 2px;
+
+
+
+
+
+}
+
+
+
+.edit-form div {
+
+    border-top: 2px solid black;
+
+    padding: 5%;
+
+
+
+}
+
+
+
+
+
+
+
+
+
+.timeline li div {
+
+    border-top: 2px solid black;
+
+    padding: 5%;
+
+
+
+}
+
+
+
+textarea {
+
+    width: 100%;
+
+
+
+}
+
+
+
+select {
+
+    width: 100%;
+
+
+
+}
+
+
+
+input {
+
+    width: 100%;
+
+    min-height: 30px;
+
+
+
+}
+
+
+
+.required::after {
+
+    /*puts the astrix on the page after the label has been placed*/
+
+    content: "*";
+
+    color: red;
+
+}
+
+
+
+
+
+ul {
+
+    margin: 0px;
+
+    padding-inline-start: 0px;
+
+}
+
+
+
+
+
+.key-info {
+
+
+
+    padding: 5%;
+
+    border-left: 2px solid black;
+
+    border-right: 2px solid black;
+
+    border-bottom: 2px solid black;
+
+    background-color: rgb(67, 127, 155);
+
+    color: white;
+
+
+
+}
+
+
+
+.key-info h3 {
+
+    padding-left: 5%;
+
+}
+
+
+
+.skill ul li {
+
+    padding-inline-start: 40px;
+
+    padding-top: 3%;
+
+    padding-bottom: 3%;
+
+    list-style: none;
+
+}
+
+
+
+form {
+
+
+
+    padding: 5%;
+
+}
+
+
+
+
+
+
+
+.title {
+
+    font-size: 1.2em;
+
+    font-weight: bolder;
+
+    text-transform: uppercase;
+
+    margin-bottom: 5px;
+
+}
+
+
+
+.text {
+
+    font-size: 1.2em;
+
+    font-weight: normal;
+
+    padding-bottom: 9px;
+
+}
+
+
+
+.visible-container {
+
+    display: block;
+
+}
+
+
+
+.hidden-container {
+
+    display: none;
+
+}
+
+
+
+.summary-container {
+
+    display: flex;
+
+}
+
+.summary-container .summary {
+    padding-right: 10px;
+    flex: 1;
+
+}
+
+.summary-container .image {
+
+    flex: 1;
+
+}
+
+
+
+@media(min-width: 540px) {
+
+    html {
+
+        font-size: 1.15em;
+
+
+
+    }
+
+
+
+}
+
+
+
+@media(min-width: 720px) {
+
+    html {
+
+        font-size: 1.3em;
+
+
+
+    }
+
+}
+
+
+
+@media(min-width: 1024px) {
+
+    html {
+
+        font-size: 1.45em;
+
+
+
+    }
+
+
+
+}
