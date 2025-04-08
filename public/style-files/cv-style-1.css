@@ -435,6 +435,12 @@ form {
 .summary-container .image {
 
     flex: 1;
+    align: center;
+    text-align: center;
+
+}
+.summary-container .image img {
+    max-width: 600px;
 
 }
 
